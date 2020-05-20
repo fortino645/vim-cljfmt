@@ -8,7 +8,7 @@ let fireplace#skip = 'synIDattr(synID(line("."),col("."),1),"name") =~? "comment
 function! s:RequireCljfmt()
     let l:cmd = "(require 'cljfmt.core)"
     try
-        silent! call fireplace#session_eval(l:cmd)
+        silent! call ConjureEval(l:cmd)
         return 1
     catch /^Clojure: class java.io.FileNotFoundException*/
         echom "vim-cljfmt: Could not locate cljfmt/core__init.class or cljfmt/core.clj on classpath."
@@ -65,7 +65,7 @@ function! s:GetFormattedFile()
     let l:bufcontents = s:GetCurrentBufferContents()
     redir => l:cljfmt_output
     try
-        silent! call fireplace#session_eval(s:GetReformatString(l:bufcontents))
+        silent! call ConjureEval(s:GetReformatString(l:bufcontents))
     catch /^Clojure:.*/
         redir END
         throw "fmterr"
@@ -148,7 +148,7 @@ function! s:CljfmtRange(bang, line1, line2, count, args) abort
       let l:preformatted = s:GetReformatString(escaped_contents)
 
       redir => l:formatted_content
-      silent! call fireplace#session_eval(l:preformatted)
+      silent! call ConjureEval(l:preformatted)
       redir END
 
       let content = s:FilterOutput(split(l:formatted_content, "\n"), 0)
